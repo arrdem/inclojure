@@ -5,8 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojars.gjahad/debug-repl "0.3.3"]]
-  :main ^:skip-aot inclojure.core
+  :aot [inclojure.core]
+  :main inclojure.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :dev {:source-paths ["dev"]}}
+  :jvm-opts ["-Xmx 2G" "-server"]
   :repl-options {:init-ns inclojure.repl})

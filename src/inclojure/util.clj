@@ -5,7 +5,7 @@
 (defn pos-files [which]
   (filter
     (every-pred #(.isFile %) (complement #(.isHidden %)))
-    (file-seq (file (str "../penn-treebank3/tagged/pos/" which)))))
+    (file-seq (file (str "./penn-treebank3/tagged/pos/" which)))))
 
 (defn lines [[f & fs]]
   (lazy-seq
@@ -43,11 +43,13 @@
         #(s/split (s/replace % #"^\[ (.*) \]$", "$1") #" ")
         lines))))
 
+(def separator-line #(re-find #"^===" %))
+
 (defn sentences [lines]
   "return token/label pairs, grouped by sentence from the input"
   (->> (filter not-empty lines)
-       (partition-by #(re-find #"^===" %))
-       (take-nth 2)
+       (partition-by separator-line)
+       (filter (complement #(and (= (count %) 1) (separator-line (first %)))))
        (filter (complement metadata-sentence))
        (map lines-to-labeled-tokens)))
 

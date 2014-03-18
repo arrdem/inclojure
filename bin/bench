@@ -1,0 +1,10 @@
+#!/bin/bash
+
+lein compile
+
+echo "Python:"
+python inclojure/__init__.py wsj
+echo ""
+
+echo "Clojure:"
+java -Xmx4G -jar target/inclojure-0.1.0-SNAPSHOT-standalone.jar wsj
