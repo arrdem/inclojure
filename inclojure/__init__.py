@@ -9,10 +9,8 @@ from random import random
 
 POS_DIR = './penn-treebank3/tagged/pos'
 OUTPUT_DIR = 'sample-data/pos'
-EXPRESSIVE_OUTPUT_DIR = 'sample-data/pos-expressive'
 PARTITION_TOKEN = '============'
 METADATA_LINE = re.compile(r'^\[ @')
-WSJ_SECTION = re.compile(r'wsj/(\d+)/')
 
 def files(pattern):
     for root, dirs, files in walk(POS_DIR):
