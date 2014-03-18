@@ -53,3 +53,9 @@ clojure, so i'm probably just missing something.
 workload?**
 
 [hmm]: http://en.wikipedia.org/wiki/Hidden_Markov_model
+[clj-impl]: https://github.com/aaronj1335/inclojure/blob/master/src/inclojure/hmm.clj#L20
+[py-impl]: https://github.com/aaronj1335/inclojure/blob/master/inclojure/__init__.py#L73
+[clj-io]: https://github.com/aaronj1335/inclojure/blob/master/src/inclojure/util.clj#L56
+[py-io]: https://github.com/aaronj1335/inclojure/blob/master/inclojure/__init__.py#L58
+[clj-hmm]: https://github.com/aaronj1335/inclojure/blob/master/src/inclojure/hmm.clj#L20
+[py-hmm]: https://github.com/aaronj1335/inclojure/blob/master/inclojure/__init__.py#L73
