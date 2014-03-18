@@ -25,7 +25,7 @@ structures.
 essentially the first step converts a bunch of files on disk that look like
 this:
 
-```txt
+```text
 ======================================
 
 List/VB 
@@ -52,7 +52,7 @@ serve/VB
 
 to a sequence of word/part of speech pairs that look like this:
 
-```txt
+```text
 (list, VB)
 (the, DT)
 (flights, NNS)
