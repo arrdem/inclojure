@@ -22,6 +22,67 @@ so there are two phases:
 the first is i/o intensive, the second involves creating very large map/dict
 structures.
 
+essentially the first step converts a bunch of files on disk that look like
+this:
+
+```txt
+======================================
+
+List/VB 
+[ the/DT flights/NNS ]
+from/IN 
+[ Baltimore/NNP ]
+to/TO Seattle/NNP 
+[ that/WDT stop/VBP ]
+in/IN 
+[ Minneapolis/NNP ]
+
+======================================
+
+[ @0y0022sx-d-5/CD ]
+
+======================================
+
+Does/VBZ 
+[ this/DT flight/NN ]
+serve/VB 
+
+...etc...
+```
+
+to a sequence of word/part of speech pairs that look like this:
+
+```txt
+(list, VB)
+(the, DT)
+(flights, NNS)
+(from, IN)
+(Baltimore, NNP)
+
+...etc...
+```
+
+and the second step converts that sequence to a set of maps from words to
+(randomly generated) probabilities:
+
+```js
+{
+  "VB": {
+    "list": 0.233432928,
+    "the": 0.984650376,
+    "flights": 0.502483920,
+    // ...etc...
+  },
+  "DT": {
+    "list": 0.684650376,
+    "the": 0.133432928,
+    "flights": 0.702483920,
+    // ...etc...
+  },
+  // ...etc...
+}
+```
+
 ## benchmark script
 
 you should just be able to run:
