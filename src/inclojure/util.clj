@@ -1,19 +1,20 @@
 (ns inclojure.util
   (:use     [clojure.java.io :only (file reader)])
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [taoensso.timbre.profiling :refer [defnp]]))
 
-(defn pos-files [which]
+(defnp pos-files [which]
   (filter
     (every-pred #(.isFile %) (complement #(.isHidden %)))
     (file-seq (file (str "./penn-treebank3/tagged/pos/" which)))))
 
-(defn lines [[f & fs]]
+(defnp lines [[f & fs]]
   (lazy-seq
     (concat
       (line-seq (reader (.getPath f)))
       (if (seq fs) (lines fs)))))
 
-(defn metadata-sentence
+(defnp metadata-sentence
   "between each sentence is some metadata about where in the corpus the line
   comes from:
 
@@ -25,7 +26,7 @@
     (empty? others)
     (re-find #"^\[ \@" first-line)))
 
-(defn lines-to-labeled-tokens [lines]
+(defnp lines-to-labeled-tokens [lines]
   "the lines of a sentence look like this:
 
     List/VB
@@ -45,7 +46,7 @@
 
 (def separator-line #(re-find #"^===" %))
 
-(defn sentences [lines]
+(defnp sentences [lines]
   "return token/label pairs, grouped by sentence from the input"
   (->> (filter not-empty lines)
        (partition-by separator-line)
@@ -53,11 +54,12 @@
        (filter (complement metadata-sentence))
        (map lines-to-labeled-tokens)))
 
-(defn labeled-tokens [[sentence & input-sentences]]
+(defnp labeled-tokens [[sentence & input-sentences]]
   "whereas `sentences` returns a list of lists of token/label pairs, this just
   returns a flat list of the token/label pairs"
   (lazy-seq
     (concat
       sentence
-      (if (seq input-sentences) (labeled-tokens input-sentences)))))
+      (if (seq input-sentences) 
+        (labeled-tokens input-sentences)))))
 
