@@ -10,7 +10,9 @@
   `(let [start# (. System (nanoTime))
          ret# (doall ~expr)]
      {:value ret#
-      :ms (/ (double (- (. System (nanoTime)) start#)) 1000000000.0)}))
+      :ms (-> (. System nanoTime)
+              (- start#)
+              (/ 1000000000.0))}))
 
 (def times 5)
 
