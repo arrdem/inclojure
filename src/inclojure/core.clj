@@ -1,15 +1,16 @@
 (ns inclojure.core
    (:require [inclojure.util :as util]
-             [inclojure.hmm :as hmm])
-  (:gen-class))
+             [inclojure.hmm :as hmm]
+             [taoensso.timbre.profiling 
+              :refer [profile defnp]])
+   (:gen-class))
 
 (defmacro timeit
   "like clojure.core/time except it evaluates any lazy-seq's, returns the
   msecs passed, and ignores the output"
   [expr]
-  `(let [start# (. System (nanoTime))
-         ret# (doall ~expr)]
-     {:value ret#
+  `(let [start# (. System (nanoTime))]
+     {:value ~expr
       :ms (-> (. System nanoTime)
               (- start#)
               (/ 1000000000.0))}))
@@ -31,15 +32,27 @@
       (hmm/random-hmm)
       (timeit)))
 
-(defn avg [x]
-  (/ (apply + x) (count x)))
+(defnp avg [x]
+  (/ (apply + x) 
+     (count x)))
 
 (defn bench [f corpus]
   ; warm up the system
   (f corpus)
-  (avg (map :ms (repeatedly times (partial f corpus)))))
+  (let [s (->> (for [i (range 5)] 
+                 (f corpus))
+               (map :ms))
+        sp (doall s)]
+  (avg sp)))
 
 (defn -main
   [corpus & args]
-  (println (str "File I/O: " (bench token-seq corpus)))
-  (println (str "HMM:      " (bench random-hmm corpus))))
+  (do (println "File I/O: ")
+      (profile :info :token-seq (bench token-seq corpus))
+      (println "--------------------"))
+  
+  (do (println "HMM:      ")
+      (profile :info :random-hmm (bench random-hmm corpus))
+      (println "--------------------"))
+  (. System exit 0))
+      
