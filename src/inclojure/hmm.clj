@@ -1,23 +1,23 @@
 (ns inclojure.hmm
   (:use [inclojure.util]
-        [alex-and-georges.debug-repl]))
+        [alex-and-georges.debug-repl]
+        [taoensso.timbre.profiling 
+         :refer [defnp]]))
 
-(defn tokens-and-labels [labeled-tokens]
+(defnp tokens-and-labels [labeled-tokens]
   "given a sequence of token/label pairs, return a set of the tokens and a set
   of the labels"
-  ; {:tokens (set (map first labeled-tokens))
-  ;  :labels (set (map second labeled-tokens))})
   (reduce
-    (fn [{:keys [tokens labels]} [token label]]
-      {:tokens (conj tokens token)
-       :labels (conj labels label)})
-    {:tokens #{} :labels #{}}
-    labeled-tokens))
+   (fn [[tokens labels] [token label]]
+     [(conj tokens token)
+      (conj labels label)])
+   [#{} #{}] labeled-tokens))
 
-(defn random-probs-for-tokens [tokens]
-  (into {} (map #(vector % (rand)) tokens)))
+(defnp random-probs-for-tokens [tokens]
+  (zipmap tokens
+          (map (fn [x] (rand)) (range))))
 
-(defn random-hmm [labeled-tokens]
+(defnp random-hmm [labeled-tokens]
   "create an hmm
 
   more formally, a set of N+2 states:
@@ -53,7 +53,10 @@
      :labels {
       'foo' {'bar' 0.123 ... rest of token/probability paris}
       ... rest of labels}}"
-  (let [{:keys [tokens labels]} (tokens-and-labels labeled-tokens)]
+  (let [[tokens labels] (tokens-and-labels labeled-tokens)]
     {:tokens tokens
      :label-set labels
-     :labels (into {} (map #(vector % (random-probs-for-tokens tokens)) labels))}))
+     :labels (zipmap labels
+                     (map (fn [x] 
+                            (random-probs-for-tokens tokens))
+                          (range)))}))
