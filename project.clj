@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.6.0"]
+                 [com.taoensso/timbre "3.1.6"]
                  [org.clojars.gjahad/debug-repl "0.3.3"]]
   :aot [inclojure.core]
   :main inclojure.core
