@@ -17,17 +17,19 @@
 (def times 5)
 
 (defn token-seq [corpus]
-  (timeit (-> (util/pos-files corpus)
-              (util/lines)
-              (util/sentences)
-              (util/labeled-tokens))))
+  (-> (util/pos-files corpus)
+      (util/lines)
+      (util/sentences)
+      (util/labeled-tokens)
+      (timeit)))
 
 (defn random-hmm [corpus]
-  (timeit (-> (util/pos-files corpus)
-              (util/lines)
-              (util/sentences)
-              (util/labeled-tokens)
-              (hmm/random-hmm))))
+  (-> (util/pos-files corpus)
+      (util/lines)
+      (util/sentences)
+      (util/labeled-tokens)
+      (hmm/random-hmm)
+      (timeit)))
 
 (defn avg [x]
   (/ (apply + x) (count x)))
