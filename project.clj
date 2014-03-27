@@ -9,6 +9,7 @@
   :main inclojure.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:source-paths ["dev"]}}
+             :dev {:dependencies [[org.clojure/tools.namespace "0.2.4"]]
+                   :source-paths ["dev"]}}
   :jvm-opts ["-Xmx 2G" "-server"]
   :repl-options {:init-ns inclojure.repl})
