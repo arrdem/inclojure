@@ -1,23 +1,31 @@
 (ns inclojure.ngram
-  (use inclojure.util)
+  (:use inclojure.util)
+  (:require [taoensso.timbre.profiling :refer [defnp pspy]])
   (:gen-class))
 
 (defn initial-model
-  ([] (initial-model :forward))
+  ([] (pspy :initial-model (initial-model :forward)))
   ([direction]
-   {:forward (if (not= direction :backward) true)
-    :unigram {"<S>" 0 "</S>" 0 "<UNK>" 0}
-    :bigram {}}))
+     (pspy :initial-model
+           {:forward (if (not= direction :backward) true)
+            :unigram {"<S>" 0 "</S>" 0 "<UNK>" 0}
+            :bigram {}})))
+  
+(defnp start 
+  [{:keys [forward]}] 
+  (if forward "<S>" "</S>"))
 
-(defn start [{:keys [forward]}] (if forward "<S>" "</S>"))
+(defnp end
+  [{:keys [forward]}] 
+  (if forward "</S>" "<S>"))
 
-(defn end   [{:keys [forward]}] (if forward "</S>" "<S>"))
-
-(defn inc-token [model-map k]
+(defnp inc-token 
+  [model-map k]
   (let [v (model-map k)]
     (assoc model-map k (inc v))))
 
-(defn add-token [model token]
+(defnp add-token 
+  [model token]
   (inc-token (:unigram model) token))
 
 ; (defn train-sentence [{:keys [unigram bigram forward] :as model} sentence]
